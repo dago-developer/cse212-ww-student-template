@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 /// <summary>
 /// Defines a maze using a dictionary. The dictionary is provided by the
 /// user when the Maze object is created. The dictionary will contain the
@@ -30,36 +33,44 @@ public class Maze
     /// Check to see if you can move left.  If you can, then move.  If you
     /// can't move, throw an InvalidOperationException with the message "Can't go that way!".
     /// </summary>
-    public void MoveLeft()
-    {
-        // FILL IN CODE
+    public void MoveLeft() {
+        var currCoord = (_currX, _currY);
+        // Índice 0 representa left
+        if (_mazeMap.ContainsKey(currCoord) && _mazeMap[currCoord][0]) {
+            _currX -= 1;
+        } else {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
-    /// <summary>
-    /// Check to see if you can move right.  If you can, then move.  If you
-    /// can't move, throw an InvalidOperationException with the message "Can't go that way!".
-    /// </summary>
-    public void MoveRight()
-    {
-        // FILL IN CODE
+    public void MoveRight() {
+        var currCoord = (_currX, _currY);
+        // Índice 1 representa right
+        if (_mazeMap.ContainsKey(currCoord) && _mazeMap[currCoord][1]) {
+            _currX += 1;
+        } else {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
-    /// <summary>
-    /// Check to see if you can move up.  If you can, then move.  If you
-    /// can't move, throw an InvalidOperationException with the message "Can't go that way!".
-    /// </summary>
-    public void MoveUp()
-    {
-        // FILL IN CODE
+    public void MoveUp() {
+        var currCoord = (_currX, _currY);
+        // Índice 2 representa up
+        if (_mazeMap.ContainsKey(currCoord) && _mazeMap[currCoord][2]) {
+            _currY -= 1; 
+        } else {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
-    /// <summary>
-    /// Check to see if you can move down.  If you can, then move.  If you
-    /// can't move, throw an InvalidOperationException with the message "Can't go that way!".
-    /// </summary>
-    public void MoveDown()
-    {
-        // FILL IN CODE
+    public void MoveDown() {
+        var currCoord = (_currX, _currY);
+        // Índice 3 representa down
+        if (_mazeMap.ContainsKey(currCoord) && _mazeMap[currCoord][3]) {
+            _currY += 1;
+        } else {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     public string GetStatus()

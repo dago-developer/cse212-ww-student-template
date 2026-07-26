@@ -19,10 +19,36 @@ public static class SetsAndMaps
     /// that there were no duplicates) and therefore should not be returned.
     /// </summary>
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
-    public static string[] FindPairs(string[] words)
-    {
-        // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+    public static string[] FindPairs(string[] words) {
+        var seen = new HashSet<string>();
+        var displayed = new HashSet<string>();
+        var results = new List<string>();
+
+        foreach (string word in words) {
+            if (word.Length != 2) continue;
+
+            char[] charArray = word.ToCharArray();
+            Array.Reverse(charArray);
+            string reversed = new string(charArray);
+
+            if (word[0] == word[1]) {
+                seen.Add(word);
+                continue;
+            }
+
+            if (seen.Contains(reversed)) {
+                string pairKey = string.Compare(word, reversed) < 0 ? $"{word} & {reversed}" : $"{reversed} & {word}";
+                
+                if (!displayed.Contains(pairKey)) {
+                    results.Add($"{word} & {reversed}");
+                    displayed.Add(pairKey);
+                }
+            }
+
+            seen.Add(word);
+        }
+
+        return results.ToArray();
     }
 
     /// <summary>
@@ -36,13 +62,20 @@ public static class SetsAndMaps
     /// </summary>
     /// <param name="filename">The name of the file to read</param>
     /// <returns>fixed array of divisors</returns>
-    public static Dictionary<string, int> SummarizeDegrees(string filename)
-    {
+    public static Dictionary<string, int> SummarizeDegrees(string filename) {
         var degrees = new Dictionary<string, int>();
-        foreach (var line in File.ReadLines(filename))
-        {
-            var fields = line.Split(",");
-            // TODO Problem 2 - ADD YOUR CODE HERE
+
+        foreach (string line in File.ReadLines(filename)) {
+            var fields = line.Split(',');
+            if (fields.Length > 3) {
+                string degree = fields[3].Trim();
+                
+                if (degrees.ContainsKey(degree)) {
+                    degrees[degree]++;
+                } else {
+                    degrees[degree] = 1;
+                }
+            }
         }
 
         return degrees;
@@ -64,10 +97,35 @@ public static class SetsAndMaps
     /// Reminder: You can access a letter by index in a string by 
     /// using the [] notation.
     /// </summary>
-    public static bool IsAnagram(string word1, string word2)
-    {
-        // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+    public static bool IsAnagram(string word1, string word2) {
+        string clean1 = word1.Replace(" ", "").ToLower();
+        string clean2 = word2.Replace(" ", "").ToLower();
+
+        if (clean1.Length != clean2.Length) {
+            return false;
+        }
+
+        var counts = new Dictionary<char, int>();
+
+        foreach (char c in clean1) {
+            if (counts.ContainsKey(c)) {
+                counts[c]++;
+            } else {
+                counts[c] = 1;
+            }
+        }
+
+        foreach (char c in clean2) {
+            if (!counts.ContainsKey(c)) {
+                return false;
+            }
+            counts[c]--;
+            if (counts[c] < 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -96,12 +154,21 @@ public static class SetsAndMaps
         
 
         var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
-        // Testing!
-        // TODO Problem 5:
-        // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
-        // on those classes so that the call to Deserialize above works properly.
-        // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
-        // 3. Return an array of these string descriptions.
-        return [];
+        
+        var results = new List<string>();
+
+        if (featureCollection?.Features != null)
+        {
+            foreach (var feature in featureCollection.Features)
+            {
+                string place = feature.Properties.Place;
+                decimal mag = feature.Properties.Mag;
+                
+
+                results.Add($"{place} - Mag {mag}");
+            }
+        }
+
+        return results.ToArray();
     }
 }
